@@ -4,7 +4,8 @@ const {
   validatePath,
   fileSearch,
   readFileContent,
-  httpPetitionStatus
+  httpPetitionStatus,
+  outputWithS
 } = require("./nodeMethods.js");
 
 // const path = require("path");
@@ -59,16 +60,17 @@ readFileContent(arrayFilePathMd)
           ))
         } else {
           console.log(
-            chalk.blueBright.bold(` ──────────✿◦• Links Encontrados ✔️  ✿◦•──────────   `
+            chalk.yellowBright.bold(` ──────────✿◦• Links Encontrados ✔️  ✿◦•──────────   `
             )
           );
           if(options.validate === true){
             httpPetitionStatus(objectLinks).then(response => {
               resolve(response);
-            // console.log('RESUELVE PLEASEE', response);
           })
+          }else if(options.stats === true){
+            outputWithS(objectLinks)
           }else{
-            resolve(objectLinks);
+            resolve(objectLinks)
           }
         }
       })

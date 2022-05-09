@@ -1,16 +1,12 @@
 #!/usr/bin/env node
+
 //se importa la función md-links
-const mdLinks = require('./index.js')
+const mdLinks = require("./index.js");
+const finalOutput = require("./nodeMethods.js")
 // node methods process
-const process = require('process');
-const chalk = require('chalk');
-const { resolve } = require('path');
-
-
-//Captura argumentos desde la Terminal
-const pathArg = process.argv[2];
-const optionsArg = {};
-
+const process = require("process");
+const chalk = require("chalk");
+const { link } = require("fs");
 
 // let figlet = require('figlet');
 // const { url } = require("inspector");
@@ -24,20 +20,33 @@ const optionsArg = {};
 //     console.log(data)
 // });
 
-if(process.argv.includes('--validate')){
-    optionsArg.validate = true;
+//Captura argumentos desde la Terminal
+const pathArg = process.argv[2];
+const optionsArg = {};
+
+if (process.argv.includes("--validate")) {
+  optionsArg.validate = true;
 }
 
-
-const cliFuntion = () => {
-    mdLinks(pathArg, optionsArg)
-    .then((result) => {
-        // resolve(result)
-        console.log('Hola desde cli',result)
-    })
-    .catch((error) => {
-        console.log(error);
-    })
+if (process.argv.includes("--stats")) {
+  optionsArg.stats = true;
 }
 
-cliFuntion();
+const terminalArg = [pathArg];
+
+if(optionsArg.validate === true){
+  terminalArg.push('--validate')
+}
+
+if(optionsArg.stats === true){
+  terminalArg.push('--stats')
+}
+
+mdLinks(pathArg, optionsArg)
+.then((result) =>{
+  console.log('Hola desde cli',terminalArg, result)
+})
+.catch((err)=>{
+  console.log(err)
+})
+
