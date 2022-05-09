@@ -3,29 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const chalk = require('chalk');
 
-//Se importa Fetch para realizar la petición HTTP
-// import fetch from 'node-fetch';
-// const fetch = require('node-fetch')
-
-/**
- * 
- * @param {*} pathToConvert 
- * @returns 
- */
+//--------- Se importa Fetch para realizar la petición HTTP 👇 ---------
 const { default: fetch } = require("node-fetch");
-const { runInContext } = require("vm");
 
-// let figlet = require('figlet');
-// const { url } = require("inspector");
-// const { text } = require("figlet");
-//   figlet('Md-Links', function(err, data) {
-//       if (err) {
-//           console.log('Something went wrong...');
-//           console.dir(err);
-//           return;
-//     }
-//       console.log(data)
-// });
 
 //--------- Función que  Resuelve y normaliza la ruta dada 👇 ---------
 const converterPath = (pathToConvert) => {
@@ -130,50 +110,50 @@ const readFileContent = (pathMdList) => new Promise((resolve) => {
 };
 
 // funcion output sin options
-const outputWithoutVS = (linksObjArr) => {
-  linksObjArr.forEach((link) => {
-    console.log(
-      chalk.white('href:'),
-      chalk.yellowBright(`${link.href}`),
-      chalk.white('text:'),
-      chalk.blueBright(`${link.text}`),
-      chalk.white('fileName:'),
-      chalk.cyan(`${link.fileName}`),
-    );
-  });
-};
+// const outputWithoutVS = (linksObjArr) => {
+//   linksObjArr.forEach((link) => {
+//     console.log(
+//       chalk.white('href:'),
+//       chalk.yellowBright(`${link.href}`),
+//       chalk.white('text:'),
+//       chalk.blueBright(`${link.text}`),
+//       chalk.white('fileName:'),
+//       chalk.cyan(`${link.fileName}`),
+//     );
+//   });
+// };
 // funcion output con --validate
-const outputWithV = (arrObjLinks) => {
-  arrObjLinks.forEach((link) => {
-    if (link.value.status === 200) {
-      console.log(
-        chalk.white('href:'),
-        chalk.yellowBright(`${link.value.href}`),
-        chalk.white('text:'),
-        chalk.blueBright(`${link.value.text}`),
-        chalk.white('fileName:'),
-        chalk.cyan(`${link.value.fileName}`),
-        chalk.white('status:'),
-        chalk.green(`${link.value.status}`),
-        chalk.white('statusText:'),
-        chalk.green(`${link.value.statusText}`),
-      );
-    } else {
-      console.log(
-        chalk.white('href:'),
-        chalk.red(`${link.value.href}`),
-        chalk.white('text:'),
-        chalk.blueBright(`${link.value.text}`),
-        chalk.white('fileName:'),
-        chalk.cyan(`${link.value.fileName}`),
-        chalk.white('status:'),
-        chalk.red(`${link.value.status}`),
-        chalk.white('statusText:'),
-        chalk.red(`${link.value.statusText}`),
-      );
-    }
-  });
-};
+// const outputWithV = (arrObjLinks) => {
+//   arrObjLinks.forEach((link) => {
+//     if (link.value.status === 200) {
+//       console.log(
+//         chalk.white('href:'),
+//         chalk.yellowBright(`${link.value.href}`),
+//         chalk.white('text:'),
+//         chalk.blueBright(`${link.value.text}`),
+//         chalk.white('fileName:'),
+//         chalk.cyan(`${link.value.fileName}`),
+//         chalk.white('status:'),
+//         chalk.green(`${link.value.status}`),
+//         chalk.white('statusText:'),
+//         chalk.green(`${link.value.statusText}`),
+//       );
+//     } else {
+//       console.log(
+//         chalk.white('href:'),
+//         chalk.red(`${link.value.href}`),
+//         chalk.white('text:'),
+//         chalk.blueBright(`${link.value.text}`),
+//         chalk.white('fileName:'),
+//         chalk.cyan(`${link.value.fileName}`),
+//         chalk.white('status:'),
+//         chalk.red(`${link.value.status}`),
+//         chalk.white('statusText:'),
+//         chalk.red(`${link.value.statusText}`),
+//       );
+//     }
+//   });
+// };
 // funcion output con --stats
 const outputWithS = (arrObjLinks) => {
   const totalLinks = arrObjLinks.length;
@@ -185,38 +165,38 @@ const outputWithS = (arrObjLinks) => {
 };
 
 // funcion output con --validate y --stats
-const outputWithVS = (arrObjLinks) => {
-  outputWithV(arrObjLinks);
-  const totalLinks = arrObjLinks.length;
-  const unique = [...new Set(arrObjLinks.map((link) => link.value.href))];
-  const uniqueLinks = unique.length;
-  const broken = arrObjLinks.filter((link) => link.value.statusText !== 'ok');
-  const brokenLinks = broken.length;
-  console.table({ TOTAL: totalLinks, UNIQUE: uniqueLinks, BROKEN: brokenLinks });
-};
+// const outputWithVS = (arrObjLinks) => {
+//   outputWithV(arrObjLinks);
+//   const totalLinks = arrObjLinks.length;
+//   const unique = [...new Set(arrObjLinks.map((link) => link.value.href))];
+//   const uniqueLinks = unique.length;
+//   const broken = arrObjLinks.filter((link) => link.value.statusText !== 'ok');
+//   const brokenLinks = broken.length;
+//   console.table({ TOTAL: totalLinks, UNIQUE: uniqueLinks, BROKEN: brokenLinks });
+// };
 // funcion primer output sin options
-const finalOutput = (args, arrObjLinks) => {
-  const argsStr = args.length.toString();
-  if (typeof arrObjLinks === 'string') {
-    console.log(chalk.redBright.bold(arrObjLinks));
-  } else if (arrObjLinks.length === 0) {
-    console.log(chalk.redBright.bold('Archivo no contiene links'));
-  } else if (argsStr === '1') {
-    console.log(chalk.magentaBright.bold('✦──✦──LINKS ENCONTRADOS──✦──✦'));
-    outputWithoutVS(arrObjLinks);
-  } else if (args.includes('--validate') && !args.includes('--stats')) {
-    console.log(chalk.magentaBright.bold('✦──✦──VALIDACION DE LINKS ENCONTRADOS──✦──✦'));
-    outputWithV(arrObjLinks);
-  } else if (!args.includes('--validate') && args.includes('--stats')) {
-    console.log(chalk.magentaBright.bold('✦──✦──STATS DE LINKS ENCONTRADOS──✦──✦'));
-    outputWithS(arrObjLinks);
-  } else if (args.includes('--validate') && args.includes('--stats')) {
-    console.log(chalk.magentaBright.bold('✦──✦──VALIDACION Y STATS DE LINKS ENCONTRADOS──✦──✦'));
-    outputWithVS(arrObjLinks);
-  } else {
-    console.log(chalk.redBright.bold('Confirmar argumentos'));
-  }
-};
+// const finalOutput = (args, arrObjLinks) => {
+//   const argsStr = args.length.toString();
+//   if (typeof arrObjLinks === 'string') {
+//     console.log(chalk.redBright.bold(arrObjLinks));
+//   } else if (arrObjLinks.length === 0) {
+//     console.log(chalk.redBright.bold('Archivo no contiene links'));
+//   } else if (argsStr === '1') {
+//     console.log(chalk.magentaBright.bold('✦──✦──LINKS ENCONTRADOS──✦──✦'));
+//     outputWithoutVS(arrObjLinks);
+//   } else if (args.includes('--validate') && !args.includes('--stats')) {
+//     console.log(chalk.magentaBright.bold('✦──✦──VALIDACION DE LINKS ENCONTRADOS──✦──✦'));
+//     outputWithV(arrObjLinks);
+//   } else if (!args.includes('--validate') && args.includes('--stats')) {
+//     console.log(chalk.magentaBright.bold('✦──✦──STATS DE LINKS ENCONTRADOS──✦──✦'));
+//     outputWithS(arrObjLinks);
+//   } else if (args.includes('--validate') && args.includes('--stats')) {
+//     console.log(chalk.magentaBright.bold('✦──✦──VALIDACION Y STATS DE LINKS ENCONTRADOS──✦──✦'));
+//     outputWithVS(arrObjLinks);
+//   } else {
+//     console.log(chalk.redBright.bold('Confirmar argumentos'));
+//   }
+// };
 module.exports = {
   converterPath,
   validatePath,
@@ -224,5 +204,4 @@ module.exports = {
   readFileContent,
   httpPetitionStatus,
   outputWithS,
-  finalOutput,
 };

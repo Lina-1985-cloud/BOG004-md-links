@@ -5,79 +5,66 @@ const {
   fileSearch,
   readFileContent,
   httpPetitionStatus,
-  outputWithS
 } = require("./nodeMethods.js");
 
-// const path = require("path");
-
-
-//--------- node methods filesystem - path ---------
+//--------- Se importa Librería chalk --------- 👇
 const chalk = require("chalk");
 
 //--------- Función mdLinks 👇 ---------
-const mdLinks = (path, options = {validate:false}) => new Promise((resolve, reject) => {
+const mdLinks = (path, options) => new Promise((resolve, reject) => {
 
-    //--------- convertir ruta capturada en absoluta ---------
+//--------- convertir ruta capturada en absoluta 👇 ---------
     const pathAbsolute = converterPath(path);
-    //--------- Guardo el rersultado e invoco la función pasando como argumento pathAbsolute ---------
+//--------- Guardo el rersultado e invoco la función pasando como argumento pathAbsolute 👇---------
     const resultValidatePath = validatePath(pathAbsolute);
 
-    //--------- Condicional que valida la ruta y la recursividad invocando la función fileSearch desde nodeMethods ---------
+    //--------- Condicional que valida la ruta y la recursividad invocando la función fileSearch desde nodeMethods 👇---------
     let arrayFilePathMd = [];
-    if (resultValidatePath) {
-      const filesMd = fileSearch(arrayFilePathMd, pathAbsolute)// invocamos la función que nos da la recursividad
+    if(resultValidatePath === false){
+      reject((chalk.redBright` 
+      ╔════════════════════╗
+
+  La ruta ingresada no es válida 😕
+      
+      ╚════════════════════╝
+      
+      `))
+    }else if(resultValidatePath){
+      const filesMd = fileSearch(arrayFilePathMd, pathAbsolute) // 👈 invocamos la función que nos da la recursividad
       if (filesMd.length === 0){
-        console.log(chalk.redBright(`
-        ╔════════════════════╗
+        reject(chalk.redBright(`
+              ╔════════════════════╗
+      
+          El directorio No contiene Archivos .md 
+                ó No es un archivo .md 🧐 !!
+              
+              ╚════════════════════╝`
+            ))
+        }else{
+          readFileContent(arrayFilePathMd) //👈 Invocamos la funcion readFiles 
+          .then((objectLinks)=>{
+            if (objectLinks.length === 0) {
+              reject(chalk.redBright(` 
+              ╔════════════════════╗
 
-    El directorio No contiene Archivos 🧐
-        
-        ╚════════════════════╝`
-      ))
-      }
-    } else {
-        const invalidPath = ` 
-        ╔════════════════════╗
-
-    La ruta ingresada no es válida 😕
-        
-        ╚════════════════════╝
-        
-        `
-        console.log(chalk.redBright.bold(invalidPath));
+            El Archivo no contiene Links 🧐 
+              
+              ╚════════════════════╝`
+              ));
+            } else {
+              if (options.validate === true) {
+                httpPetitionStatus(objectLinks).then(response => {
+                  resolve(response)
+  
+                })
+              } else {
+                resolve(objectLinks);
+              }
+            }
+          })
+        }
     }
 
-    //--------- Se invoca la Función de ReadFileContent para que se resuelva la promesa:👇 ---------
-readFileContent(arrayFilePathMd)
-      .then((objectLinks) => {
-        if (objectLinks.length === 0) {
-          console.log(chalk.redBright(` 
-          ╔════════════════════╗
-
-        El Archivo no contiene Links 🧐 
-          
-          ╚════════════════════╝`
-          ))
-        } else {
-          console.log(
-            chalk.yellowBright.bold(` ──────────✿◦• Links Encontrados ✔️  ✿◦•──────────   `
-            )
-          );
-          if(options.validate === true){
-            httpPetitionStatus(objectLinks).then(response => {
-              resolve(response);
-          })
-          }else if(options.stats === true){
-            outputWithS(objectLinks)
-          }else{
-            resolve(objectLinks)
-          }
-        }
-      })
-      .catch((error) => {
-        const errorMessage = "Error";
-        reject(error, errorMessage);
-      });
   });
 
 module.exports = mdLinks;

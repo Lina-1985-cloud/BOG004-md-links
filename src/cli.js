@@ -1,52 +1,70 @@
 #!/usr/bin/env node
-
-//se importa la función md-links
 const mdLinks = require("./index.js");
-const finalOutput = require("./nodeMethods.js")
-// node methods process
 const process = require("process");
 const chalk = require("chalk");
-const { link } = require("fs");
+const { arrayTemplate, statusTemplate, totalLinks } = require("./stats.js");
 
-// let figlet = require('figlet');
-// const { url } = require("inspector");
-// const { text } = require("figlet");
-// figlet('Md-Links', function(err, data) {
-//     if (err) {
-//         console.log('Something went wrong...');
-//         console.dir(err);
-//         return;
-// }
-//     console.log(data)
-// });
+const arguments = process.argv.slice(2);
 
-//Captura argumentos desde la Terminal
-const pathArg = process.argv[2];
-const optionsArg = {};
+// se importa librería Figlet para dar estilo al nombre md-links
+let figlet = require('figlet');
+const { url } = require("inspector");
+const { text } = require("figlet");
+  figlet('Md-Links', function(err, data) {
+      if (err) {
+          console.log('Something went wrong...');
+          console.dir(err);
+          return;
+    }
+      console.log(data)
+});
 
-if (process.argv.includes("--validate")) {
-  optionsArg.validate = true;
+
+switch (arguments.length) {
+  case 0:
+    console.log(chalk.redBright.bold("🚨  • Por favor Ingresa una Ruta • 🚨  "));
+    break;
+  case 1:
+    mdLinks(arguments[0], { validate: false })
+      .then((response) => {
+        console.log(`${arrayTemplate(response)}`);
+      })
+      .catch((err) => console.log(chalk.redBright.bold(err)));
+    break;
+  case 2:
+    //console.log('argumento[1]', arguments[1]);
+    if (arguments[1] === "--validate") {
+      // console.log('argumento[0]', arguments[0]);
+      mdLinks(arguments[0], { validate: true })
+        .then((response) => {
+          console.log(`${statusTemplate(response)}`);
+        })
+        .catch((err) => console.log(chalk.redBright.bold(err)));
+    } else if (arguments[1] === "--stats") {
+      mdLinks(arguments[0], { validate: true })
+        .then((response) => {
+          console.log(`${totalLinks(response)}`);
+        })
+        .catch((err) => console.log(chalk.redBright.bold(err)));
+    }
+    // else if (argumentos[1] === '--help') {
+    //   console.log(chalk.cyan.bold(help));
+    // }
+    else console.log(chalk.redBright.bold("🚨  • Opción Inválida • 🚨  "));
+    break;
+  case 3:
+    if (
+      (arguments[1] === "--validate" && arguments[2] === "--stats") ||
+      (arguments[1] === "--stats" && arguments[2] === "--validate")
+    ) {
+      mdLinks(arguments[0], { validate: true })
+        .then((response) => {
+          console.log(`${totalLinks(response)}`);
+          console.log(`${statusTemplate(response)}`);
+        })
+        .catch((err) => console.log(chalk.redBright.bold(err)));
+    } else console.log(chalk.redBright.bold("🚨  • Opción Inválida • 🚨  "));
+    break;
+  default:
+    console.log(chalk.redBright.bold("🚨  • Entrada de Datos Incorrectos• 🚨  "));
 }
-
-if (process.argv.includes("--stats")) {
-  optionsArg.stats = true;
-}
-
-const terminalArg = [pathArg];
-
-if(optionsArg.validate === true){
-  terminalArg.push('--validate')
-}
-
-if(optionsArg.stats === true){
-  terminalArg.push('--stats')
-}
-
-mdLinks(pathArg, optionsArg)
-.then((result) =>{
-  console.log('Hola desde cli',terminalArg, result)
-})
-.catch((err)=>{
-  console.log(err)
-})
-
