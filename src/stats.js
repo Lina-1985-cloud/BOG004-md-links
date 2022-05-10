@@ -11,12 +11,13 @@ const statusTemplate = (arrayLinks) => {
     console.log(chalk.greenBright.bold(`| ⋆ ESTADO DE LOS LINKS ⋆ | :`));
     arrayLinks.forEach(link => {
         if (link.status === 200) {
-            console.log(chalk.blueBright.bold(`href: ${chalk.cyan(link.href)}  status: ${chalk.cyanBright.bold(link.status)}  ok: ${chalk.magentaBright.bold(link.ok)}\n ---`));
+            console.log(chalk.blueBright.bold(`href: ${chalk.cyan(link.href)}  status: ${chalk.greenBright.bold(link.status)}  ok: ${chalk.magentaBright.bold(link.ok)}\n ---`));
         } else {
-            console.log(chalk.blueBright.bold(` href: ${chalk.cyan(link.href)}  status: ${chalk.cyanBright.bold(link.status)}  fail: ${chalk.redBright.bold(link.ok)}\n --- \n`));
+            console.log(chalk.blueBright.bold(` href: ${chalk.cyan(link.href)}  status: ${chalk.redBright.bold(link.status)}  fail: ${chalk.redBright.bold(link.ok)}\n --- \n`));
         }
     })
 }
+
 
 const totalLinks = (arraylinks) => {
     const totalArray = arraylinks.map(link => link.href);

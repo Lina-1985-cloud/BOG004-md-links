@@ -11,7 +11,7 @@ const {
 const chalk = require("chalk");
 
 //--------- Función mdLinks 👇 ---------
-const mdLinks = (path, options) => new Promise((resolve, reject) => {
+const mdLinks = (path, options = {validate:false}) => new Promise((resolve, reject) => {
 
 //--------- convertir ruta capturada en absoluta 👇 ---------
     const pathAbsolute = converterPath(path);
@@ -21,36 +21,16 @@ const mdLinks = (path, options) => new Promise((resolve, reject) => {
     //--------- Condicional que valida la ruta y la recursividad invocando la función fileSearch desde nodeMethods 👇---------
     let arrayFilePathMd = [];
     if(resultValidatePath === false){
-      reject((chalk.redBright` 
-      ╔════════════════════╗
-
-  La ruta ingresada no es válida 😕
-      
-      ╚════════════════════╝
-      
-      `))
+      reject((chalk.redBright('🚨  • La ruta ingresada no es válida 😕  • 🚨')))
     }else if(resultValidatePath){
       const filesMd = fileSearch(arrayFilePathMd, pathAbsolute) // 👈 invocamos la función que nos da la recursividad
       if (filesMd.length === 0){
-        reject(chalk.redBright(`
-              ╔════════════════════╗
-      
-          El directorio No contiene Archivos .md 
-                ó No es un archivo .md 🧐 !!
-              
-              ╚════════════════════╝`
-            ))
+        reject(chalk.redBright('El directorio No contiene Archivos .md ó No es un archivo .md 🧐 !!'))
         }else{
           readFileContent(arrayFilePathMd) //👈 Invocamos la funcion readFiles 
           .then((objectLinks)=>{
             if (objectLinks.length === 0) {
-              reject(chalk.redBright(` 
-              ╔════════════════════╗
-
-            El Archivo no contiene Links 🧐 
-              
-              ╚════════════════════╝`
-              ));
+              reject(chalk.redBright('🚨  • El archivo no contiene Links • 🚨 🧐'));
             } else {
               if (options.validate === true) {
                 httpPetitionStatus(objectLinks).then(response => {

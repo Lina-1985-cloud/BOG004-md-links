@@ -1,7 +1,6 @@
 //node methods filesystem - path
 const fs = require("fs");
 const path = require("path");
-const chalk = require('chalk');
 
 //--------- Se importa Fetch para realizar la petición HTTP 👇 ---------
 const { default: fetch } = require("node-fetch");
@@ -68,20 +67,23 @@ const fileSearch = (arrayPaths, fileAbsolutePath) => {
   });
 
 // --------- Función para leer los archivos Con Promesa:👇 ---------
-const readFileContent = (pathMdList) => new Promise((resolve) => {
-    const arrMds = [];
-      pathMdList.map((element) => {
-        fs.readFile(element, "utf8", function (err, data) {
-        if (err) {
-          const errorMessage = "❗ No se puede leer el contenido del archivo";
-          console.log(errorMessage);
-        } else {
+const readFileContent = (pathMdList) => new Promise((resolve, reject) => {
+  const arrMds = [];
+  pathMdList.map((element) => {
+    fs.readFile(element, "utf8", function (err, data) {
+      if (err) {
+        const errorMessage = "❗ No se puede leer el contenido del archivo";
+        console.log(errorMessage);
+      } else {
         getLinks(data, element)
         .then((resArray)=>{
-            arrMds.push(resArray)
+          arrMds.push(resArray)
             if (arrMds.length === pathMdList.length) {
               resolve(arrMds.flat());
             }
+          })
+          .catch((err)=>{
+            reject(err);
           })
         }
       });
@@ -90,7 +92,6 @@ const readFileContent = (pathMdList) => new Promise((resolve) => {
 
  // --------- Función para hacer la petición HTTP:👇 ---------
   const httpPetitionStatus = (arrObjLinks) => {
-    // console.log('que pasa wey?',arrObjLinks);
     const arrPromise = arrObjLinks.map((obj) => fetch(obj.href)
         .then((res) => ({
         href: obj.href,
@@ -109,99 +110,11 @@ const readFileContent = (pathMdList) => new Promise((resolve) => {
     return Promise.all(arrPromise);
 };
 
-// funcion output sin options
-// const outputWithoutVS = (linksObjArr) => {
-//   linksObjArr.forEach((link) => {
-//     console.log(
-//       chalk.white('href:'),
-//       chalk.yellowBright(`${link.href}`),
-//       chalk.white('text:'),
-//       chalk.blueBright(`${link.text}`),
-//       chalk.white('fileName:'),
-//       chalk.cyan(`${link.fileName}`),
-//     );
-//   });
-// };
-// funcion output con --validate
-// const outputWithV = (arrObjLinks) => {
-//   arrObjLinks.forEach((link) => {
-//     if (link.value.status === 200) {
-//       console.log(
-//         chalk.white('href:'),
-//         chalk.yellowBright(`${link.value.href}`),
-//         chalk.white('text:'),
-//         chalk.blueBright(`${link.value.text}`),
-//         chalk.white('fileName:'),
-//         chalk.cyan(`${link.value.fileName}`),
-//         chalk.white('status:'),
-//         chalk.green(`${link.value.status}`),
-//         chalk.white('statusText:'),
-//         chalk.green(`${link.value.statusText}`),
-//       );
-//     } else {
-//       console.log(
-//         chalk.white('href:'),
-//         chalk.red(`${link.value.href}`),
-//         chalk.white('text:'),
-//         chalk.blueBright(`${link.value.text}`),
-//         chalk.white('fileName:'),
-//         chalk.cyan(`${link.value.fileName}`),
-//         chalk.white('status:'),
-//         chalk.red(`${link.value.status}`),
-//         chalk.white('statusText:'),
-//         chalk.red(`${link.value.statusText}`),
-//       );
-//     }
-//   });
-// };
-// funcion output con --stats
-const outputWithS = (arrObjLinks) => {
-  const totalLinks = arrObjLinks.length;
-  const unique = [...new Set(arrObjLinks.map((link) => link.href))];
-  const uniqueLinks = unique.length;
-  const brokenLinks = arrObjLinks.filter(link => link.status != 200)
-  const totalBroken = brokenLinks.length
-  console.table({ TOTAL: totalLinks, UNIQUE: uniqueLinks, BROKEN: totalBroken});
-};
 
-// funcion output con --validate y --stats
-// const outputWithVS = (arrObjLinks) => {
-//   outputWithV(arrObjLinks);
-//   const totalLinks = arrObjLinks.length;
-//   const unique = [...new Set(arrObjLinks.map((link) => link.value.href))];
-//   const uniqueLinks = unique.length;
-//   const broken = arrObjLinks.filter((link) => link.value.statusText !== 'ok');
-//   const brokenLinks = broken.length;
-//   console.table({ TOTAL: totalLinks, UNIQUE: uniqueLinks, BROKEN: brokenLinks });
-// };
-// funcion primer output sin options
-// const finalOutput = (args, arrObjLinks) => {
-//   const argsStr = args.length.toString();
-//   if (typeof arrObjLinks === 'string') {
-//     console.log(chalk.redBright.bold(arrObjLinks));
-//   } else if (arrObjLinks.length === 0) {
-//     console.log(chalk.redBright.bold('Archivo no contiene links'));
-//   } else if (argsStr === '1') {
-//     console.log(chalk.magentaBright.bold('✦──✦──LINKS ENCONTRADOS──✦──✦'));
-//     outputWithoutVS(arrObjLinks);
-//   } else if (args.includes('--validate') && !args.includes('--stats')) {
-//     console.log(chalk.magentaBright.bold('✦──✦──VALIDACION DE LINKS ENCONTRADOS──✦──✦'));
-//     outputWithV(arrObjLinks);
-//   } else if (!args.includes('--validate') && args.includes('--stats')) {
-//     console.log(chalk.magentaBright.bold('✦──✦──STATS DE LINKS ENCONTRADOS──✦──✦'));
-//     outputWithS(arrObjLinks);
-//   } else if (args.includes('--validate') && args.includes('--stats')) {
-//     console.log(chalk.magentaBright.bold('✦──✦──VALIDACION Y STATS DE LINKS ENCONTRADOS──✦──✦'));
-//     outputWithVS(arrObjLinks);
-//   } else {
-//     console.log(chalk.redBright.bold('Confirmar argumentos'));
-//   }
-// };
 module.exports = {
   converterPath,
   validatePath,
   fileSearch,
   readFileContent,
   httpPetitionStatus,
-  outputWithS,
 };
