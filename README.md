@@ -17,7 +17,7 @@
 
 ## 1. Diagrama
 
-[Diagrama de flujo](https://raw.githubusercontent.com/Lina-1985-cloud/BOG004-md-links/main/images/MD-links.png)
+[Diagrama de flujo]('./images/MD-links.png')
 
 ***
 
