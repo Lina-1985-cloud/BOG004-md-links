@@ -66,11 +66,26 @@ npm install md-links-lina-1985
 ```sh
 
 $ md-links ./files-mds
+  __  __     _       _     _       _        
+ |  \/  | __| |     | |   (_)_ __ | | _____ 
+ | |\/| |/ _` |_____| |   | | '_ \| |/ / __|
+ | |  | | (_| |_____| |___| | | | |   <\__ \
+ |_|  |_|\__,_|     |_____|_|_| |_|_|\_\___/
+
+| ⋆ LINKS ENCONTRADOS ⋆ | :
+href:  https://gith.com/Lina-1985-cloud/BOG004-md-links text:  GitHub  fileName: D:\Proyectos-Laboratoria\BOG004-md-links\files-mds\otraPrueba.md 
+ ---- 
+href:  https://www.youtube.com/ text:  Youtube  fileName: D:\Proyectos-Laboratoria\BOG004-md-links\files-mds\prueba-3.md 
+ ---- 
+href:  https://nodejs.org/api/fs.html text:  Node.js  fileName: D:\Proyectos-Laboratoria\BOG004-md-links\files-mds\prueba-2.md 
+ ---- 
+href:  https://www.google.com/ text:  Google  fileName: D:\Proyectos-Laboratoria\BOG004-md-links\files-mds\prueba.md 
+ ---- 
 ```
 
 ## 9. Opciones 🌻
 
---validate valida los links que están dentro de los archivos .md
+--validate:  valida los links que están dentro de los archivos .md
 
 ```sh
 
@@ -93,7 +108,7 @@ href: https://www.google.com/  status: 200  ok: OK
 ```
 ***
 
---stats Muestra las estadísticas de los links
+--stats:  Muestra las estadísticas de los links
 
 ```sh
 
@@ -113,7 +128,7 @@ $ md-links ./files-mds --stats
 ```
 ***
 
---validate y --stats Valida los links mostrando si todos funcionan o hay uno roto
+--validate y --stats:  Valida los links mostrando si todos funcionan o hay uno roto
 
 ```sh
 
