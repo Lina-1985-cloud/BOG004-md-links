@@ -56,7 +56,7 @@ Las pruebas se ejecutaron usando Jest.
 ***
 
 ## 7. INSTALACION 
-npm install md-links-lina-1985
+npm install md-links-lina
 
 ***
 
