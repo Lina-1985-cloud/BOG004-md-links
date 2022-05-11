@@ -1,7 +1,42 @@
 {
-  "name": "md-links",
+  "name": "md-links-lina-1985",
   "version": "0.1.0",
   "engines": {
     "node": ">=14.x"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "figlet": "^1.5.2",
+    "node-fetch": "^2.6.7"
+  },
+  "bin": {
+    "md-links": "src/cli.js"
+  },
+  "description": "Librería para obtener links de archivos markdown",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "jest --coverage --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lina-1985-cloud/BOG004-md-links.git"
+  },
+  "keywords": [
+    "javaScript"
+  ],
+  "author": "Lina Marcela Villa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lina-1985-cloud/BOG004-md-links/issues"
+  },
+  "homepage": "https://github.com/Lina-1985-cloud/BOG004-md-links#readme",
+  "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "jest": "^28.1.0"
   }
 }
