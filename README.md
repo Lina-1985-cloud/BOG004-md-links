@@ -17,7 +17,7 @@
 
 ## 1. Diagrama
 
-![Diagrama de flujo]('./images/MD-links.png')
+![Diagrama de flujo](images/MD-links.png)
 
 ***
 
