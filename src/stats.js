@@ -22,17 +22,30 @@ const statusTemplate = (arrayLinks) => {
 const totalLinks = (arraylinks) => {
     const totalArray = arraylinks.map(link => link.href);
     const uniqueLinks = [...new Set(totalArray)];
-    const brokenLinks = arraylinks.filter(link => link.status != 200)
     return `${chalk.greenBright.bold(` 
     | ⋆ ESTADÍSTICAS ⋆ |:
+    `)}
+    ${chalk.blueBright.bold(`\t▷ Total:${totalArray.length} \n\t▷ Unique:${uniqueLinks.length}`)}
+    `
+};
+
+const totalLinksBroken = (arraylinks) => {
+    const totalArray = arraylinks.map(link => link.href);
+    const uniqueLinks = [...new Set(totalArray)];
+    const brokenLinks = arraylinks.filter(link => link.status != 200)
+    return `${chalk.greenBright.bold(` 
+    | ⋆ ESTADÍSTICAS CON --VALIDATE ⋆ |:
     `)}
     ${chalk.blueBright.bold(`\t▷ Total:${totalArray.length} \n\t▷ Unique:${uniqueLinks.length}`, chalk.redBright(`\n\t▷ Broken:${brokenLinks.length} `) )}
     `
 };
 
+
+
 module.exports = {
     arrayTemplate,
     statusTemplate,
     totalLinks,
+    totalLinksBroken
     
 }

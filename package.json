@@ -1,5 +1,5 @@
 {
-  "name": "md-links",
+  "name": "md-links-lina-1985",
   "version": "0.1.0",
   "engines": {
     "node": ">=14.x"
@@ -24,14 +24,19 @@
     "type": "git",
     "url": "git+https://github.com/Lina-1985-cloud/BOG004-md-links.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "javaScript"
+  ],
+  "author": "Lina Marcela Villa",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Lina-1985-cloud/BOG004-md-links/issues"
   },
   "homepage": "https://github.com/Lina-1985-cloud/BOG004-md-links#readme",
   "devDependencies": {
+    "eslint": "^8.15.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
     "jest": "^28.1.0"
   }
 }
